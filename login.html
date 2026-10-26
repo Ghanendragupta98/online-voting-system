@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Online Voting System</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root {
+    --green: #176b52;
+    --dark-green: #10513e;
+    --light-green: #eaf5ef;
+    --text: #20332c;
+    --muted: #64746c;
+    --white: #ffffff;
+}
+body {
+    font-family: Arial, sans-serif;
+    background: #f5faf7;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+header {
+    background: white;
+    border-bottom: 1px solid #e3ebe6;
+}
+.navbar {
+    max-width: 1150px;
+    margin: auto;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+.logo {
+    color: var(--green);
+    font-size: 21px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.nav-links a {
+    color: var(--text);
+    text-decoration: none;
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-size: 14px;
+}
+.nav-links a:hover {
+    background: var(--light-green);
+}
+.nav-links .register-btn {
+    background: var(--green);
+    color: white;
+}
+.nav-links .register-btn:hover {
+    background: var(--dark-green);
+}
+.logout-btn {
+    background: #fff0f0;
+    color: #a52c2c !important;
+}
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    padding: 36px;
+    border: 1px solid #e3ebe6;
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(23, 107, 82, 0.07);
+}
+.login-heading {
+    text-align: center;
+    margin-bottom: 28px;
+}
+.login-icon {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 15px;
+    background: var(--light-green);
+    color: var(--green);
+    border-radius: 14px;
+    font-size: 27px;
+}
+.login-heading h1 {
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+.login-heading p {
+    color: var(--muted);
+    font-size: 14px;
+}
+.form-group {
+    margin-bottom: 19px;
+}
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+input {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1px solid #d5e1da;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(23, 107, 82, 0.10);
+}
+.submit-btn {
+    width: 100%;
+    border: none;
+    padding: 13px;
+    border-radius: 8px;
+    background: var(--green);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+}
+.submit-btn:hover {
+    background: var(--dark-green);
+}
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+.message {
+    display: none;
+    padding: 11px;
+    margin-bottom: 17px;
+    border-radius: 7px;
+    font-size: 14px;
+    text-align: center;
+}
+.message.error {
+    display: block;
+    color: #a52c2c;
+    background: #fff0f0;
+    border: 1px solid #f4cccc;
+}
+.message.success {
+    display: block;
+    color: #176b52;
+    background: var(--light-green);
+    border: 1px solid #c8e6d4;
+}
+.register-text {
+    text-align: center;
+    margin-top: 23px;
+    font-size: 14px;
+    color: var(--muted);
+}
+.register-text a {
+    color: var(--green);
+    font-weight: bold;
+    text-decoration: none;
+}
+.register-text a:hover {
+    text-decoration: underline;
+}
+footer {
+    text-align: center;
+    background: #153d30;
+    color: #e7f1eb;
+    padding: 20px;
+    font-size: 13px;
+}
+footer p + p {
+    margin-top: 5px;
+    color: #c1d4c9;
+}
+@media (max-width: 600px) {
+    .navbar {
+        padding: 14px 16px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .logo {
+        font-size: 19px;
+    }
+    .nav-links {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    .login-container {
+        padding: 27px 22px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <a href="index.html" class="logo">Online Voting System</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="elections.html">Elections</a>
+            <a href="login.html" id="loginLink">Login</a>
+            <a href="register.html" id="registerLink" class="register-btn">Register</a>
+            <a href="#" id="logoutBtn" class="logout-btn" style="display:none;">Logout</a>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="login-container">
+        <div class="login-heading">
+            <div class="login-icon">&#128274;</div>
+            <h1>Welcome Back</h1>
+            <p>Log in to your account to continue.</p>
+        </div>
+
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your 10-digit phone number"
+                    inputmode="numeric"
+                    pattern="[0-9]{10}"
+                    maxlength="10"
+                    autocomplete="tel"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Login</button>
+        </form>
+
+        <p class="register-text" id="registerText">
+            Don't have an account?
+            <a href="register.html">Register here</a>
+        </p>
+    </div>
+</main>
+
+<footer>
+    <p><strong>Online Voting System</strong></p>
+    <p>Educational project demonstration. Not an official government voting service.</p>
+</footer>
+
+<script>
+const API_BASE_URL = "http://localhost:5000";
+
+const loginForm = document.getElementById("loginForm");
+const messageBox = document.getElementById("message");
+const submitBtn = document.getElementById("submitBtn");
+
+function updateNavigation() {
+    const isLoggedIn = Boolean(localStorage.getItem("loggedInUser"));
+
+    document.getElementById("loginLink").style.display =
+        isLoggedIn ? "none" : "inline-block";
+
+    document.getElementById("registerLink").style.display =
+        isLoggedIn ? "none" : "inline-block";
+
+    document.getElementById("logoutBtn").style.display =
+        isLoggedIn ? "inline-block" : "none";
+
+    document.getElementById("registerText").style.display =
+        isLoggedIn ? "none" : "block";
+}
+
+function showMessage(message, type) {
+    messageBox.textContent = message;
+    messageBox.className = "message " + type;
+}
+
+document.getElementById("logoutBtn").addEventListener("click", function(event) {
+    event.preventDefault();
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "index.html";
+});
+
+// Update the navigation without automatically redirecting logged-in voters.
+updateNavigation();
+
+loginForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const phone = document.getElementById("phone").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+        showMessage("Please enter a valid 10-digit phone number.", "error");
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Logging in...";
+    messageBox.className = "message";
+
+    try {
+        const response = await fetch(API_BASE_URL + "/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                phone: phone,
+                password: password
+            })
+        });
+
+        let data;
+
+        try {
+            data = await response.json();
+        } catch {
+            throw new Error("The server returned an invalid response.");
+        }
+
+        if (!response.ok || !data.success || !data.user) {
+            showMessage(
+                data.message || "Login failed. Please check your phone number and password.",
+                "error"
+            );
+            return;
+        }
+
+        localStorage.setItem("loggedInUser", JSON.stringify(data.user));
+        updateNavigation();
+
+        showMessage("Login successful! Redirecting to elections...", "success");
+
+        setTimeout(function() {
+            window.location.href = "elections.html";
+        }, 700);
+
+    } catch (error) {
+        console.error("Login error:", error);
+        showMessage(
+            "Unable to connect to the server. Check that the backend is running and the login API is available.",
+            "error"
+        );
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Login";
+    }
+});
+</script>
+
+</body>
+</html>
+

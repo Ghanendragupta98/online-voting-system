@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Election Candidates - Online Voting System</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#176b52;--dark-green:#10513e;--light-green:#eaf5ef;--text:#20332c;--muted:#64746c;--white:#fff}
+body{font-family:Arial,sans-serif;background:#f8fbf9;color:var(--text);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+header{background:white;border-bottom:1px solid #e3ebe6}
+.navbar{max-width:1150px;margin:auto;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.logo{color:var(--green);font-size:21px;font-weight:bold;text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nav-links a{color:var(--text);text-decoration:none;padding:9px 12px;border-radius:7px;font-size:14px}
+.nav-links a:hover{background:var(--light-green)}
+.nav-links .register-btn{background:var(--green);color:white}
+.logout-btn{background:#fff0f0;color:#a52c2c!important}
+main{flex:1}
+.hero{background:var(--light-green);padding:45px 20px;text-align:center}
+.hero .tag{display:inline-block;background:white;color:var(--green);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:12px}
+.hero h1{font-size:clamp(28px,5vw,40px);margin-bottom:8px}
+.hero p{color:var(--muted)}
+.content{max-width:1100px;margin:auto;padding:35px 24px 60px}
+.section-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.section-heading h2{font-size:24px}
+.count{background:var(--light-green);color:var(--green);padding:6px 12px;border-radius:20px;font-size:13px;font-weight:bold}
+.candidate-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.candidate-card{background:white;border:1px solid #e2ebe5;border-radius:13px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.candidate-card h3{font-size:21px;overflow-wrap:anywhere}
+.party{color:var(--green);font-weight:bold}
+.detail{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.btn{display:block;width:100%;padding:11px 8px;border:0;border-radius:8px;text-align:center;text-decoration:none;font-size:14px;font-weight:bold;cursor:pointer}
+.profile-btn{background:var(--light-green);color:var(--green);border:1px solid #c8e6d4}
+.vote-btn{background:var(--green);color:white}
+.vote-btn:hover{background:var(--dark-green)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.status{display:none;padding:11px;border-radius:8px;font-size:14px;margin-bottom:20px;overflow-wrap:anywhere}
+.status.success{display:block;background:#eaf5ef;color:#176b52;border:1px solid #c8e6d4}
+.status.error{display:block;background:#fff0f0;color:#a52c2c;border:1px solid #f4cccc}
+.status.info{display:block;background:#f1f4f2;color:#40534a;border:1px solid #dce5df}
+.message{background:white;border:1px solid #e2ebe5;border-radius:12px;padding:22px;text-align:center;color:var(--muted);grid-column:1/-1}
+footer{text-align:center;background:#153d30;color:#e7f1eb;padding:22px 20px;font-size:13px}
+footer p+p{margin-top:5px;color:#c1d4c9}
+@media(max-width:700px){.navbar{align-items:flex-start;flex-direction:column}.candidate-grid{grid-template-columns:1fr}.content{padding:28px 16px 45px}.hero{padding:35px 16px}}
+@media(max-width:400px){.actions{grid-template-columns:1fr}.candidate-card{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+<nav class="navbar">
+<a href="index.html" class="logo">Online Voting System</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="elections.html">Elections</a>
+<a href="login.html" id="loginLink">Login</a>
+<a href="register.html" id="registerLink" class="register-btn">Register</a>
+<a href="#" id="logoutBtn" class="logout-btn" style="display:none">Logout</a>
+</div>
+</nav>
+</header>
+
+<main>
+<section class="hero">
+<span class="tag">CANDIDATE INFORMATION</span>
+<h1>Election Candidates</h1>
+<p>Review candidate details and cast your vote in this educational demonstration.</p>
+</section>
+
+<section class="content">
+<div id="pageStatus" class="status" role="status" aria-live="polite"></div>
+<div class="section-heading">
+<h2>Available Candidates</h2>
+<span class="count" id="candidateCount">Loading...</span>
+</div>
+<div id="candidateList" class="candidate-grid">
+<div class="message">Loading candidates...</div>
+</div>
+</section>
+</main>
+
+<footer>
+<p><strong>Online Voting System</strong></p>
+<p>Educational project demonstration. Not an official government voting service.</p>
+</footer>
+
+<script>
+const API_BASE_URL="http://localhost:5000";
+const params=new URLSearchParams(window.location.search);
+const electionId=Number(params.get("electionId"));
+const candidateList=document.getElementById("candidateList");
+const candidateCount=document.getElementById("candidateCount");
+const pageStatus=document.getElementById("pageStatus");
+
+function getLoggedInUser(){
+    try{
+        const raw=localStorage.getItem("loggedInUser");
+        if(!raw)return null;
+        const user=JSON.parse(raw);
+        if(!user||!Number.isInteger(Number(user.id))||Number(user.id)<=0)return null;
+        return user;
+    }catch{
+        return null;
+    }
+}
+
+function updateNavigation(){
+    const loggedIn=Boolean(getLoggedInUser());
+    document.getElementById("loginLink").style.display=loggedIn?"none":"inline-block";
+    document.getElementById("registerLink").style.display=loggedIn?"none":"inline-block";
+    document.getElementById("logoutBtn").style.display=loggedIn?"inline-block":"none";
+}
+
+document.getElementById("logoutBtn").addEventListener("click",function(event){
+    event.preventDefault();
+    localStorage.removeItem("loggedInUser");
+    window.location.href="index.html";
+});
+
+function showStatus(message,type){
+    pageStatus.textContent=message;
+    pageStatus.className="status "+type;
+}
+
+function addText(parent,tag,className,text){
+    const element=document.createElement(tag);
+    if(className)element.className=className;
+    element.textContent=text;
+    parent.appendChild(element);
+    return element;
+}
+
+function createCandidateCard(candidate,hasVoted,votedCandidateId){
+    const card=document.createElement("article");
+    card.className="candidate-card";
+
+    addText(card,"h3","",candidate.name||"Unnamed candidate");
+    addText(card,"p","party",candidate.party||"Party not listed");
+    addText(card,"p","detail","Constituency: "+(candidate.constituency||"Not listed"));
+    addText(card,"p","detail","Education: "+(candidate.education||"Not listed"));
+    addText(card,"p","detail","Age: "+(candidate.age??"Not listed"));
+
+    const actions=document.createElement("div");
+    actions.className="actions";
+
+    const profileLink=document.createElement("a");
+    profileLink.className="btn profile-btn";
+    profileLink.textContent="View Profile";
+    profileLink.href="candidate.html?id="+encodeURIComponent(candidate.id);
+    actions.appendChild(profileLink);
+
+    const voteButton=document.createElement("button");
+    voteButton.type="button";
+    voteButton.className="btn vote-btn";
+
+    if(hasVoted){
+        voteButton.disabled=true;
+        voteButton.textContent=Number(candidate.id)===Number(votedCandidateId)?"Your Vote":"Already Voted";
+    }else{
+        voteButton.textContent="Vote Now";
+        voteButton.addEventListener("click",()=>castVote(candidate,voteButton));
+    }
+
+    actions.appendChild(voteButton);
+    card.appendChild(actions);
+    return card;
+}
+
+async function checkVoteStatus(user){
+    if(!user)return {hasVoted:false,candidateId:null};
+
+    const response=await fetch(
+        API_BASE_URL+"/api/vote/status/"+encodeURIComponent(user.id)+"/"+encodeURIComponent(electionId)
+    );
+
+    if(!response.ok)throw new Error("Unable to check your voting status.");
+
+    const data=await response.json();
+    return {
+        hasVoted:Boolean(data.hasVoted),
+        candidateId:data.candidateId??null
+    };
+}
+
+async function castVote(candidate,button){
+    const user=getLoggedInUser();
+
+    if(!user){
+        const returnTo=encodeURIComponent("candidates.html?electionId="+electionId);
+        if(confirm("Please log in before voting. Go to the login page now?")){
+            window.location.href="login.html?returnTo="+returnTo;
+        }
+        return;
+    }
+
+    if(!confirm("Confirm your vote for "+candidate.name+"?\n\nThis demonstration does not provide a vote-changing option.")){
+        return;
+    }
+
+    button.disabled=true;
+    button.textContent="Submitting...";
+
+    try{
+        const response=await fetch(API_BASE_URL+"/api/vote",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({
+                userId:Number(user.id),
+                candidateId:Number(candidate.id),
+                electionId:electionId
+            })
+        });
+
+        let data={};
+        try{data=await response.json()}catch{}
+
+        if(!response.ok){
+            if(response.status===409){
+                showStatus(data.message||"A vote has already been recorded for this election.","info");
+                await loadCandidates();
+                return;
+            }
+            throw new Error(data.message||"Unable to submit your vote.");
+        }
+
+        showStatus(data.message||"Your vote was recorded successfully.","success");
+        await loadCandidates();
+    }catch(error){
+        console.error("Voting error:",error);
+        showStatus(error.message||"Unable to connect to the server. Please try again.","error");
+        button.disabled=false;
+        button.textContent="Vote Now";
+    }
+}
+
+async function loadCandidates(){
+    if(!Number.isInteger(electionId)||electionId<=0){
+        candidateCount.textContent="Unavailable";
+        candidateList.replaceChildren();
+        addText(candidateList,"div","message","Election ID is missing or invalid. Return to the Elections page and select an election.");
+        return;
+    }
+
+    candidateList.replaceChildren();
+    addText(candidateList,"div","message","Loading candidates...");
+
+    try{
+        const response=await fetch(API_BASE_URL+"/api/candidates/"+encodeURIComponent(electionId));
+        if(!response.ok)throw new Error("Unable to load candidates.");
+
+        const candidates=await response.json();
+        if(!Array.isArray(candidates))throw new Error("Unexpected response from the server.");
+
+        const user=getLoggedInUser();
+        let voteStatus={hasVoted:false,candidateId:null};
+
+        if(user){
+            try{
+                voteStatus=await checkVoteStatus(user);
+            }catch(error){
+                console.error("Vote status error:",error);
+                showStatus("Candidates loaded, but your voting status could not be checked. Refresh before attempting to vote.","error");
+            }
+        }
+
+        candidateList.replaceChildren();
+
+        if(candidates.length===0){
+            candidateCount.textContent="0 candidates";
+            addText(candidateList,"div","message","No candidates are listed for this election.");
+            return;
+        }
+
+        candidateCount.textContent=candidates.length+(candidates.length===1?" candidate":" candidates");
+
+        candidates.forEach(candidate=>{
+            candidateList.appendChild(
+                createCandidateCard(candidate,voteStatus.hasVoted,voteStatus.candidateId)
+            );
+        });
+
+        if(voteStatus.hasVoted){
+            showStatus("You have already voted in this election. You cannot vote again.","info");
+        }
+    }catch(error){
+        console.error("Candidate loading error:",error);
+        candidateCount.textContent="Unavailable";
+        candidateList.replaceChildren();
+        addText(candidateList,"div","message",error.message+" Check that the backend and MySQL are running, then refresh this page.");
+    }
+}
+
+updateNavigation();
+loadCandidates();
+</script>
+</body>
+</html>
+

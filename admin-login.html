@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Online Voting System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f4f8f5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background: #176b3a;
+            color: white;
+            padding: 17px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        nav a:hover {
+            color: #c8f7d6;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 35px 15px;
+        }
+
+        .login-card {
+            background: white;
+            width: 100%;
+            max-width: 420px;
+            padding: 32px;
+            border-radius: 12px;
+            border-top: 5px solid #23864c;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .admin-icon {
+            width: 70px;
+            height: 70px;
+            background: #e1f3e7;
+            color: #176b3a;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #176b3a;
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718076;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin: 17px 0 7px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd9cf;
+            border-radius: 6px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #23864c;
+            box-shadow: 0 0 0 3px rgba(35, 134, 76, 0.12);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 24px;
+            border: none;
+            border-radius: 6px;
+            background: #176b3a;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #10542d;
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            padding: 11px;
+            margin-top: 17px;
+            border-radius: 6px;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .error {
+            display: block;
+            background: #fdeaea;
+            color: #a32020;
+        }
+
+        .success {
+            display: block;
+            background: #e1f3e7;
+            color: #176b3a;
+        }
+
+        .notice {
+            background: #fff8e5;
+            color: #6c591f;
+            border: 1px solid #f1dfa5;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-top: 22px;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            padding: 18px;
+            color: #718076;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 15px 5%;
+            }
+
+            nav a {
+                margin-left: 10px;
+            }
+
+            .login-card {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">Online Voting System</div>
+
+    <div>
+        <a href="index.html">Home</a>
+        <a href="elections.html">Elections</a>
+    </div>
+</nav>
+
+<main>
+    <section class="login-card">
+        <div class="admin-icon">A</div>
+
+        <h1>Admin Login</h1>
+        <p class="subtitle">Sign in to access the administration portal</p>
+
+        <form id="adminLoginForm">
+            <label for="username">Administrator Username</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter administrator username"
+                autocomplete="username"
+                required
+            >
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter administrator password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit" id="loginButton">Login as Admin</button>
+
+            <div id="message" class="message" role="status" aria-live="polite"></div>
+        </form>
+
+        <div class="notice">
+            <strong>Administrator access only.</strong>
+            This is an educational demonstration. Admin access must be verified
+            by the backend; hiding this page does not secure election results.
+        </div>
+    </section>
+</main>
+
+<footer>
+    Online Voting System — Educational Mini Project
+</footer>
+
+<script>
+    const API_BASE_URL = "http://localhost:5000";
+
+    const form = document.getElementById("adminLoginForm");
+    const loginButton = document.getElementById("loginButton");
+    const message = document.getElementById("message");
+
+    function showMessage(text, type) {
+        message.textContent = text;
+        message.className = "message " + type;
+    }
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!username || !password) {
+            showMessage("Please enter your username and password.", "error");
+            return;
+        }
+
+        loginButton.disabled = true;
+        loginButton.textContent = "Signing in...";
+        message.className = "message";
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success || !data.token) {
+                throw new Error(data.message || "Administrator login failed.");
+            }
+
+            // The token must be issued and verified by the backend.
+            sessionStorage.setItem("adminToken", data.token);
+
+            showMessage("Login successful. Opening admin dashboard...", "success");
+
+            setTimeout(function () {
+                window.location.href = "admin-dashboard.html";
+            }, 600);
+
+        } catch (error) {
+            console.error("Admin login error:", error);
+
+            showMessage(
+                error.message.includes("fetch")
+                    ? "Cannot connect to the backend. Make sure the server is running."
+                    : error.message,
+                "error"
+            );
+
+        } finally {
+            loginButton.disabled = false;
+            loginButton.textContent = "Login as Admin";
+        }
+    });
+</script>
+
+</body>
+</html>

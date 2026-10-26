@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Online Voting System</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f8f5;
+    color: #26372b;
+}
+
+nav {
+    background: #176b3a;
+    color: white;
+    padding: 16px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+nav h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+nav button {
+    background: white;
+    color: #176b3a;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+nav button:hover {
+    background: #e2f3e7;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    color: #176b3a;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #657368;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.notice {
+    background: #e2f3e7;
+    border-left: 5px solid #21864b;
+    padding: 16px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.panel {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+    margin-bottom: 25px;
+}
+
+.panel h2 {
+    color: #176b3a;
+    margin-top: 0;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+label {
+    font-weight: bold;
+}
+
+select {
+    min-width: 220px;
+    max-width: 100%;
+    padding: 12px;
+    border: 1px solid #ccd8ce;
+    border-radius: 6px;
+    font-size: 15px;
+    background: white;
+}
+
+button {
+    font-family: inherit;
+}
+
+.primary {
+    background: #176b3a;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.primary:hover {
+    background: #10542c;
+}
+
+.primary:disabled {
+    background: #8da997;
+    cursor: not-allowed;
+}
+
+#message {
+    margin-top: 15px;
+    color: #a52a2a;
+    line-height: 1.5;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin: 25px 0 30px;
+}
+
+.stat {
+    background: #eaf5ed;
+    padding: 22px;
+    border-radius: 10px;
+    border: 1px solid #d8eadc;
+}
+
+.stat-label {
+    color: #4f6255;
+    font-size: 15px;
+}
+
+.stat strong {
+    display: block;
+    color: #176b3a;
+    font-size: 32px;
+    margin-top: 10px;
+}
+
+.section-heading {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    color: #176b3a;
+}
+
+.chart-container {
+    margin: 20px 0 35px;
+}
+
+.chart-row {
+    margin-bottom: 24px;
+}
+
+.chart-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.candidate-label {
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.vote-label {
+    color: #176b3a;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.chart-track {
+    width: 100%;
+    height: 28px;
+    background: #e7eee8;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.chart-bar {
+    height: 100%;
+    width: 0;
+    background: #21864b;
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.chart-bar.nonzero {
+    min-width: 3px;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: left;
+    padding: 14px 12px;
+    border-bottom: 1px solid #e0e7e1;
+}
+
+th {
+    background: #e2f3e7;
+    color: #176b3a;
+}
+
+tbody tr:hover {
+    background: #f7fbf8;
+}
+
+.rank-badge {
+    display: inline-block;
+    background: #e2f3e7;
+    color: #176b3a;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.percentage {
+    font-weight: bold;
+    color: #176b3a;
+}
+
+.empty-state {
+    color: #657368;
+    padding: 15px 0;
+    line-height: 1.6;
+}
+
+.hidden {
+    display: none !important;
+}
+
+footer {
+    text-align: center;
+    padding: 25px 15px;
+    color: #657368;
+    font-size: 14px;
+}
+
+@media (max-width: 650px) {
+    nav {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .nav-links {
+        gap: 14px;
+    }
+
+    .container {
+        margin-top: 25px;
+    }
+
+    .panel {
+        padding: 18px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-label {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .controls {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    select {
+        width: 100%;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<nav>
+    <h2>Admin Portal</h2>
+
+```
+<div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="elections.html">Elections</a>
+    <button type="button" onclick="logout()">Logout</button>
+</div>
+```
+
+</nav>
+
+<main class="container">
+
+```
+<h1>Election Results Dashboard</h1>
+
+<p class="subtitle">
+    Monitor election results, compare candidate votes, and review
+    vote percentages from one dashboard.
+</p>
+
+<div class="notice">
+    <strong>Administrator Access</strong><br>
+    Election results are loaded from the protected backend API.
+    This dashboard is intended for an educational project.
+</div>
+
+<section class="panel">
+    <h2>Select Election</h2>
+
+    <p>Choose an election to view its results.</p>
+
+    <div class="controls">
+        <label for="electionSelect">Election:</label>
+
+        <select id="electionSelect">
+            <option value="">Loading elections...</option>
+        </select>
+
+        <button
+            type="button"
+            class="primary"
+            id="viewResultsButton"
+            onclick="loadResults()">
+            View Results
+        </button>
+    </div>
+
+    <p id="message" role="status" aria-live="polite"></p>
+</section>
+
+<section id="resultsPanel" class="panel hidden">
+
+    <h2 id="electionTitle">Election Results</h2>
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-label">Total Votes</div>
+            <strong id="totalVotes">0</strong>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Number of Candidates</div>
+            <strong id="candidateCount">0</strong>
+        </div>
+
+    </div>
+
+    <h2 class="section-heading">Candidate Vote Comparison</h2>
+
+    <p class="subtitle">
+        The bars show each candidate's percentage of the total votes
+        returned by the backend.
+    </p>
+
+    <div id="chartContainer" class="chart-container"></div>
+
+    <h2 class="section-heading">Detailed Results</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Candidate Name</th>
+                    <th>Political Party</th>
+                    <th>Votes</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+
+            <tbody id="resultsBody"></tbody>
+        </table>
+    </div>
+
+</section>
+```
+
+</main>
+
+<footer>
+    Online Voting System | Educational Demonstration
+</footer>
+
+<script>
+const API_URL = "http://localhost:5000/api";
+
+function checkAdminSession() {
+    const token = sessionStorage.getItem("adminToken");
+
+    if (!token) {
+        window.location.replace("admin-login.html");
+        return false;
+    }
+
+    return true;
+}
+
+function logout() {
+    sessionStorage.removeItem("adminToken");
+    window.location.replace("admin-login.html");
+}
+
+function showMessage(message) {
+    document.getElementById("message").textContent = message;
+}
+
+async function loadElections() {
+    if (!checkAdminSession()) {
+        return;
+    }
+
+    const select = document.getElementById("electionSelect");
+    const button = document.getElementById("viewResultsButton");
+
+    select.innerHTML = '<option value="">Loading elections...</option>';
+    button.disabled = true;
+
+    try {
+        const response = await fetch(API_URL + "/elections");
+
+        if (!response.ok) {
+            throw new Error("Unable to load elections from the server.");
+        }
+
+        const data = await response.json();
+
+        const elections = Array.isArray(data)
+            ? data
+            : (data.elections || data.data || []);
+
+        select.replaceChildren();
+
+        if (!Array.isArray(elections) || elections.length === 0) {
+            select.add(new Option("No elections available", ""));
+            showMessage("No elections were found.");
+            return;
+        }
+
+        select.add(new Option("Choose an election", ""));
+
+        elections.forEach(function(election) {
+            const option = new Option(
+                election.name || election.title || ("Election " + election.id),
+                election.id
+            );
+
+            select.add(option);
+        });
+
+        showMessage("");
+    } catch (error) {
+        select.replaceChildren(
+            new Option("Unable to load elections", "")
+        );
+
+        showMessage(error.message);
+    } finally {
+        button.disabled = false;
+    }
+}
+
+function createChartRow(candidate, votes, percentage) {
+    const row = document.createElement("div");
+    row.className = "chart-row";
+
+    const label = document.createElement("div");
+    label.className = "chart-label";
+
+    const name = document.createElement("span");
+    name.className = "candidate-label";
+    name.textContent = candidate.name || "Unknown Candidate";
+
+    const voteLabel = document.createElement("span");
+    voteLabel.className = "vote-label";
+    voteLabel.textContent =
+        votes + " votes (" + percentage.toFixed(1) + "%)";
+
+    label.append(name, voteLabel);
+
+    const track = document.createElement("div");
+    track.className = "chart-track";
+
+    const bar = document.createElement("div");
+    bar.className = "chart-bar" + (votes > 0 ? " nonzero" : "");
+
+    bar.style.width = Math.min(100, Math.max(0, percentage)) + "%";
+
+    bar.setAttribute("role", "progressbar");
+    bar.setAttribute("aria-valuemin", "0");
+    bar.setAttribute("aria-valuemax", "100");
+    bar.setAttribute("aria-valuenow", percentage.toFixed(1));
+    bar.setAttribute(
+        "aria-label",
+        (candidate.name || "Unknown Candidate") +
+        ": " + percentage.toFixed(1) + "% of votes"
+    );
+
+    track.appendChild(bar);
+    row.append(label, track);
+
+    return row;
+}
+
+function createResultRow(candidate, index, votes, percentage) {
+    const row = document.createElement("tr");
+
+    const rankCell = document.createElement("td");
+    const rank = document.createElement("span");
+    rank.className = "rank-badge";
+    rank.textContent = index + 1;
+    rankCell.appendChild(rank);
+
+    const nameCell = document.createElement("td");
+    nameCell.textContent = candidate.name || "Unknown Candidate";
+
+    const partyCell = document.createElement("td");
+    partyCell.textContent =
+        candidate.party || candidate.party_name || "Independent";
+
+    const votesCell = document.createElement("td");
+    votesCell.textContent = votes;
+
+    const percentageCell = document.createElement("td");
+    percentageCell.className = "percentage";
+    percentageCell.textContent = percentage.toFixed(1) + "%";
+
+    row.append(
+        rankCell,
+        nameCell,
+        partyCell,
+        votesCell,
+        percentageCell
+    );
+
+    return row;
+}
+
+async function loadResults() {
+    if (!checkAdminSession()) {
+        return;
+    }
+
+    const electionId = document.getElementById("electionSelect").value;
+    const resultsPanel = document.getElementById("resultsPanel");
+    const button = document.getElementById("viewResultsButton");
+
+    if (!electionId) {
+        showMessage("Please select an election first.");
+        return;
+    }
+
+    const token = sessionStorage.getItem("adminToken");
+
+    resultsPanel.classList.add("hidden");
+    button.disabled = true;
+    showMessage("Loading election results...");
+
+    try {
+        const response = await fetch(
+            API_URL + "/results/" + encodeURIComponent(electionId),
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.status === 401 || response.status === 403) {
+            sessionStorage.removeItem("adminToken");
+
+            alert("Your admin session has expired. Please log in again.");
+
+            window.location.replace("admin-login.html");
+            return;
+        }
+
+        if (!response.ok || data.success === false) {
+            throw new Error(data.message || "Unable to load election results.");
+        }
+
+        const results = data.results || data.candidates || [];
+        const totalVotes = Number(data.totalVotes || 0);
+
+        if (!Array.isArray(results)) {
+            throw new Error("The server returned an unexpected results format.");
+        }
+
+        document.getElementById("electionTitle").textContent =
+            (data.electionName || "Election") + " - Results";
+
+        document.getElementById("totalVotes").textContent =
+            totalVotes.toLocaleString();
+
+        document.getElementById("candidateCount").textContent =
+            results.length.toLocaleString();
+
+        const chartContainer = document.getElementById("chartContainer");
+        const resultsBody = document.getElementById("resultsBody");
+
+        chartContainer.replaceChildren();
+        resultsBody.replaceChildren();
+
+        if (results.length === 0) {
+            const chartMessage = document.createElement("p");
+            chartMessage.className = "empty-state";
+            chartMessage.textContent =
+                "No candidate results are available for this election.";
+
+            chartContainer.appendChild(chartMessage);
+
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+
+            cell.colSpan = 5;
+            cell.textContent = "No results available.";
+
+            row.appendChild(cell);
+            resultsBody.appendChild(row);
+        } else {
+            results.forEach(function(candidate, index) {
+                const votes = Math.max(
+                    0,
+                    Number(candidate.vote_count ?? candidate.votes ?? 0) || 0
+                );
+
+                const percentage = totalVotes > 0
+                    ? (votes / totalVotes) * 100
+                    : 0;
+
+                chartContainer.appendChild(
+                    createChartRow(candidate, votes, percentage)
+                );
+
+                resultsBody.appendChild(
+                    createResultRow(candidate, index, votes, percentage)
+                );
+            });
+        }
+
+        resultsPanel.classList.remove("hidden");
+        showMessage("");
+    } catch (error) {
+        showMessage(error.message);
+    } finally {
+        button.disabled = false;
+    }
+}
+
+document.getElementById("electionSelect").addEventListener(
+    "change",
+    function() {
+        document.getElementById("resultsPanel").classList.add("hidden");
+        showMessage("");
+    }
+);
+
+loadElections();
+</script>
+
+</body>
+</html>

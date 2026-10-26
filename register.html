@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register - Online Voting System</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root {
+    --green: #176b52;
+    --dark-green: #10513e;
+    --light-green: #eaf5ef;
+    --text: #20332c;
+    --muted: #64746c;
+    --white: #ffffff;
+}
+body {
+    font-family: Arial, sans-serif;
+    background: #f5faf7;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+header {
+    background: var(--white);
+    border-bottom: 1px solid #e3ebe6;
+}
+.navbar {
+    max-width: 1150px;
+    margin: auto;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+.logo {
+    color: var(--green);
+    font-size: 21px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.nav-links a {
+    color: var(--text);
+    text-decoration: none;
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-size: 14px;
+}
+.nav-links a:hover {
+    background: var(--light-green);
+}
+.nav-links .register-btn {
+    background: var(--green);
+    color: var(--white);
+}
+.nav-links .register-btn:hover {
+    background: var(--dark-green);
+}
+.logout-btn {
+    background: #fff0f0;
+    color: #a52c2c !important;
+}
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 35px 20px;
+}
+.register-container {
+    width: 100%;
+    max-width: 480px;
+    background: var(--white);
+    padding: 32px;
+    border: 1px solid #e3ebe6;
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(23, 107, 82, 0.07);
+}
+.register-heading {
+    text-align: center;
+    margin-bottom: 25px;
+}
+.register-icon {
+    width: 55px;
+    height: 55px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 13px;
+    background: var(--light-green);
+    color: var(--green);
+    border-radius: 14px;
+    font-size: 26px;
+}
+.register-heading h1 {
+    font-size: 27px;
+    margin-bottom: 7px;
+}
+.register-heading p {
+    color: var(--muted);
+    font-size: 14px;
+}
+.form-group {
+    margin-bottom: 17px;
+}
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+input {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1px solid #d5e1da;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(23, 107, 82, 0.10);
+}
+.help-text {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+.submit-btn {
+    width: 100%;
+    border: none;
+    padding: 13px;
+    border-radius: 8px;
+    background: var(--green);
+    color: var(--white);
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+}
+.submit-btn:hover {
+    background: var(--dark-green);
+}
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+.message {
+    display: none;
+    padding: 11px;
+    margin-bottom: 17px;
+    border-radius: 7px;
+    font-size: 14px;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+.message.error {
+    display: block;
+    color: #a52c2c;
+    background: #fff0f0;
+    border: 1px solid #f4cccc;
+}
+.message.success {
+    display: block;
+    color: var(--green);
+    background: var(--light-green);
+    border: 1px solid #c8e6d4;
+}
+.login-text {
+    text-align: center;
+    margin-top: 21px;
+    font-size: 14px;
+    color: var(--muted);
+}
+.login-text a {
+    color: var(--green);
+    font-weight: bold;
+    text-decoration: none;
+}
+.login-text a:hover {
+    text-decoration: underline;
+}
+.privacy-note {
+    margin-top: 18px;
+    padding: 12px;
+    background: #f5faf7;
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+footer {
+    text-align: center;
+    background: #153d30;
+    color: #e7f1eb;
+    padding: 20px;
+    font-size: 13px;
+}
+footer p + p {
+    margin-top: 5px;
+    color: #c1d4c9;
+}
+@media (max-width: 480px) {
+    .navbar {
+        padding: 14px 16px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .logo {
+        font-size: 19px;
+    }
+    .nav-links {
+        gap: 4px;
+    }
+    .register-container {
+        padding: 25px 20px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <a href="index.html" class="logo">Online Voting System</a>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="elections.html">Elections</a>
+            <a href="login.html" id="loginLink">Login</a>
+            <a href="register.html" id="registerLink" class="register-btn">Register</a>
+            <a href="#" id="logoutBtn" class="logout-btn" style="display:none;">Logout</a>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="register-container">
+
+        <div class="register-heading">
+            <div class="register-icon">&#128100;</div>
+            <h1>Create Account</h1>
+            <p>Enter your details to register.</p>
+        </div>
+
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+
+        <form id="registerForm">
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                    minlength="2"
+                    maxlength="100"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your 10-digit phone number"
+                    inputmode="numeric"
+                    pattern="[0-9]{10}"
+                    minlength="10"
+                    maxlength="10"
+                    autocomplete="tel"
+                    required
+                >
+                <p class="help-text">Enter exactly 10 digits.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="aadhaar">Aadhaar Number</label>
+                <input
+                    type="password"
+                    id="aadhaar"
+                    name="aadhaar"
+                    placeholder="Enter your 12-digit Aadhaar number"
+                    inputmode="numeric"
+                    pattern="[0-9]{12}"
+                    minlength="12"
+                    maxlength="12"
+                    autocomplete="off"
+                    required
+                >
+                <p class="help-text">Enter exactly 12 digits. The field is masked.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+                <p class="help-text">Use at least 8 characters.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Re-enter your password"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Create Account
+            </button>
+
+        </form>
+
+        <p class="login-text" id="loginText">
+            Already have an account?
+            <a href="login.html">Login here</a>
+        </p>
+
+        <div class="privacy-note">
+            <strong>Demo notice:</strong> This is an educational project, not an
+            official voter-registration service. For safety, use dummy information
+            while testing and avoid entering your real Aadhaar number.
+        </div>
+
+    </div>
+</main>
+
+<footer>
+    <p><strong>Online Voting System</strong></p>
+    <p>Educational project demonstration. Not an official government voting service.</p>
+</footer>
+
+<script>
+const API_BASE_URL = "http://localhost:5000";
+
+const registerForm = document.getElementById("registerForm");
+const messageBox = document.getElementById("message");
+const submitBtn = document.getElementById("submitBtn");
+
+function updateNavigation() {
+    const isLoggedIn = Boolean(localStorage.getItem("loggedInUser"));
+
+    document.getElementById("loginLink").style.display =
+        isLoggedIn ? "none" : "inline-block";
+
+    document.getElementById("registerLink").style.display =
+        isLoggedIn ? "none" : "inline-block";
+
+    document.getElementById("logoutBtn").style.display =
+        isLoggedIn ? "inline-block" : "none";
+
+    document.getElementById("loginText").style.display =
+        isLoggedIn ? "none" : "block";
+}
+
+function showMessage(message, type) {
+    messageBox.textContent = message;
+    messageBox.className = "message " + type;
+}
+
+document.getElementById("logoutBtn").addEventListener("click", function(event) {
+    event.preventDefault();
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "index.html";
+});
+
+// Already logged-in users should return to the home page.
+if (localStorage.getItem("loggedInUser")) {
+    window.location.replace("index.html");
+} else {
+    updateNavigation();
+}
+
+document.getElementById("confirmPassword").addEventListener("input", function() {
+    this.setCustomValidity("");
+});
+
+document.getElementById("password").addEventListener("input", function() {
+    document.getElementById("confirmPassword").setCustomValidity("");
+});
+
+registerForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const aadhaar = document.getElementById("aadhaar").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (name.length < 2) {
+        showMessage("Please enter a valid full name.", "error");
+        return;
+    }
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+        showMessage("Phone number must contain exactly 10 digits.", "error");
+        return;
+    }
+
+    if (!/^[0-9]{12}$/.test(aadhaar)) {
+        showMessage("Aadhaar number must contain exactly 12 digits.", "error");
+        return;
+    }
+
+    if (password.length < 8) {
+        showMessage("Password must contain at least 8 characters.", "error");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        showMessage("Passwords do not match.", "error");
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Creating Account...";
+    messageBox.className = "message";
+
+    try {
+        const response = await fetch(API_BASE_URL + "/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                phone: phone,
+                aadhaar: aadhaar,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            showMessage(
+                data.message || "Registration failed. Please try again.",
+                "error"
+            );
+            return;
+        }
+
+        showMessage(
+            "Registration successful! Redirecting to login...",
+            "success"
+        );
+
+        registerForm.reset();
+
+        setTimeout(function() {
+            window.location.href = "login.html";
+        }, 1500);
+
+    } catch (error) {
+        console.error("Registration error:", error);
+        showMessage(
+            "Unable to connect to the server. Make sure your backend is running.",
+            "error"
+        );
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Create Account";
+    }
+});
+</script>
+
+</body>
+</html>

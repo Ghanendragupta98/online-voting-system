@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Profile | Online Voting System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f5;
+            color: #26352b;
+            line-height: 1.6;
+        }
+
+        nav {
+            background: #176b3a;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        nav .links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        nav a, nav button {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            color: #c8f7d6;
+        }
+
+        nav button {
+            background: white;
+            color: #176b3a;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #176b3a;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+            border-top: 5px solid #23864c;
+        }
+
+        .profile-heading {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .candidate-image {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #23864c;
+            display: block;
+            margin: 0 auto 15px;
+            background: #e1f3e7;
+        }
+
+        .avatar-fallback {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 4px solid #23864c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            background: #e1f3e7;
+            color: #176b3a;
+            font-size: 55px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #176b3a;
+            font-size: 29px;
+            margin-bottom: 5px;
+            overflow-wrap: anywhere;
+        }
+
+        .party {
+            color: #607266;
+            font-size: 17px;
+        }
+
+        .section-title {
+            color: #176b3a;
+            border-bottom: 1px solid #dce8df;
+            padding-bottom: 8px;
+            margin: 25px 0 15px;
+            font-size: 20px;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .detail-box {
+            background: #f5faf6;
+            padding: 14px;
+            border-radius: 7px;
+            border: 1px solid #e0ece3;
+            overflow-wrap: anywhere;
+        }
+
+        .detail-box strong {
+            display: block;
+            color: #607266;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .detail-box span {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .profile-text {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            color: #45554a;
+        }
+
+        .notice {
+            background: #fff8e5;
+            border: 1px solid #f1dfa5;
+            color: #6c591f;
+            border-radius: 7px;
+            padding: 14px;
+            margin-top: 25px;
+            font-size: 13px;
+        }
+
+        .status {
+            text-align: center;
+            padding: 35px 10px;
+            color: #607266;
+        }
+
+        .retry-button {
+            margin-top: 15px;
+            background: #176b3a;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            color: #607266;
+            padding: 25px 15px;
+            font-size: 13px;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 15px 5%;
+            }
+
+            nav .links {
+                gap: 12px;
+            }
+
+            .container {
+                margin: 25px auto;
+                padding: 0 14px;
+            }
+
+            .profile-card {
+                padding: 22px 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">Online Voting System</div>
+
+    <div class="links">
+        <a href="index.html">Home</a>
+        <a href="elections.html">Elections</a>
+        <a href="login.html" id="loginLink">Login</a>
+        <a href="register.html" id="registerLink">Register</a>
+        <button id="logoutButton" hidden>Logout</button>
+    </div>
+</nav>
+
+<div class="container">
+    <a href="javascript:history.back()" class="back-link">
+        ← Back to Candidates
+    </a>
+
+    <div class="profile-card">
+        <div id="loadingMessage" class="status">
+            Loading candidate profile...
+        </div>
+
+        <div id="candidateContent" hidden>
+            <div class="profile-heading">
+                <img
+                    id="candidateImage"
+                    class="candidate-image"
+                    src=""
+                    alt="Candidate photograph"
+                    hidden
+                >
+
+                <div id="avatarFallback" class="avatar-fallback">C</div>
+
+                <h1 id="candidateName">Candidate Name</h1>
+                <p class="party" id="candidateParty">Political Party</p>
+            </div>
+
+            <h2 class="section-title">Candidate Information</h2>
+
+            <div class="details">
+                <div class="detail-box">
+                    <strong>Constituency</strong>
+                    <span id="candidateConstituency">Not provided</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>Education</strong>
+                    <span id="candidateEducation">Not provided</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>Age</strong>
+                    <span id="candidateAge">Not provided</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>Candidate ID</strong>
+                    <span id="candidateId">Not provided</span>
+                </div>
+            </div>
+
+            <h2 class="section-title">Profile and Background</h2>
+            <p class="profile-text" id="candidateProfile">
+                No additional profile information is available.
+            </p>
+
+            <div class="notice">
+                <strong>Educational demonstration:</strong>
+                This website is a student project, not an official government
+                voting platform. Verify candidate information through
+                reliable public sources.
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>Online Voting System — Educational Mini Project</p>
+</footer>
+
+<script>
+    const API_BASE_URL = "http://localhost:5000";
+
+    const loginLink = document.getElementById("loginLink");
+    const registerLink = document.getElementById("registerLink");
+    const logoutButton = document.getElementById("logoutButton");
+
+    function updateNavigation() {
+        const loggedInUser = localStorage.getItem("loggedInUser");
+
+        loginLink.hidden = Boolean(loggedInUser);
+        registerLink.hidden = Boolean(loggedInUser);
+        logoutButton.hidden = !loggedInUser;
+    }
+
+    logoutButton.addEventListener("click", function () {
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "index.html";
+    });
+
+    updateNavigation();
+
+    const candidateId = new URLSearchParams(window.location.search).get("id");
+
+    const loadingMessage = document.getElementById("loadingMessage");
+    const candidateContent = document.getElementById("candidateContent");
+    const candidateImage = document.getElementById("candidateImage");
+    const avatarFallback = document.getElementById("avatarFallback");
+
+    /*
+      Candidate name -> image filename.
+      Filenames must match the actual files inside backend/images.
+    */
+    const candidateImages = {
+        "achla jethmalani": "achla-jethmalani.jpg",
+        "bansuri swaraj": "bansuri-swaraj.jpg",
+        "raaj kumar anand": "raaj-kumar-anand.jpg",
+        "somnath bharti": "somnath-bharti.jpg"
+    };
+
+    function getField(candidate, names) {
+        for (const name of names) {
+            if (
+                candidate[name] !== undefined &&
+                candidate[name] !== null &&
+                String(candidate[name]).trim() !== ""
+            ) {
+                return candidate[name];
+            }
+        }
+
+        return "Not provided";
+    }
+
+    function showError(message) {
+        loadingMessage.replaceChildren();
+
+        const text = document.createElement("p");
+        text.textContent = message;
+        loadingMessage.appendChild(text);
+
+        const retry = document.createElement("button");
+        retry.className = "retry-button";
+        retry.textContent = "Try Again";
+        retry.addEventListener("click", loadCandidate);
+
+        loadingMessage.appendChild(retry);
+        loadingMessage.hidden = false;
+        candidateContent.hidden = true;
+    }
+
+    function displayCandidateImage(name) {
+        const normalizedName = String(name)
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, " ");
+
+        const filename = candidateImages[normalizedName];
+
+        if (!filename) {
+            candidateImage.hidden = true;
+            avatarFallback.hidden = false;
+            return;
+        }
+
+        candidateImage.onerror = function () {
+            candidateImage.hidden = true;
+            avatarFallback.hidden = false;
+        };
+
+        candidateImage.onload = function () {
+            candidateImage.hidden = false;
+            avatarFallback.hidden = true;
+        };
+
+        candidateImage.src = "images/" + filename;
+    }
+
+    async function loadCandidate() {
+        if (!candidateId) {
+            showError("Candidate ID is missing. Open a profile from the Candidates page.");
+            return;
+        }
+
+        loadingMessage.textContent = "Loading candidate profile...";
+        loadingMessage.hidden = false;
+        candidateContent.hidden = true;
+
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/api/candidate/${encodeURIComponent(candidateId)}`
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Unable to load candidate profile."
+                );
+            }
+
+            const candidate = data.candidate || data;
+
+            if (!candidate || !candidate.id) {
+                throw new Error("Candidate details were not found.");
+            }
+
+            const name = getField(candidate, ["name", "candidate_name"]);
+
+            document.getElementById("candidateName").textContent = name;
+            document.getElementById("candidateParty").textContent =
+                getField(candidate, ["party", "party_name"]);
+            document.getElementById("candidateConstituency").textContent =
+                getField(candidate, ["constituency"]);
+            document.getElementById("candidateEducation").textContent =
+                getField(candidate, ["education"]);
+            document.getElementById("candidateAge").textContent =
+                getField(candidate, ["age"]);
+            document.getElementById("candidateId").textContent = candidate.id;
+            document.getElementById("candidateProfile").textContent =
+                getField(candidate, ["profile", "description", "background"]);
+
+            avatarFallback.textContent =
+                name !== "Not provided" ? String(name).trim().charAt(0).toUpperCase() : "C";
+
+            displayCandidateImage(name);
+
+            loadingMessage.hidden = true;
+            candidateContent.hidden = false;
+
+        } catch (error) {
+            console.error("Candidate profile error:", error);
+
+            showError(
+                "Unable to load candidate profile. Check that your backend and MySQL are running."
+            );
+        }
+    }
+
+    loadCandidate();
+</script>
+
+</body>
+</html>

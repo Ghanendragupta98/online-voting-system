@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elections - Online Voting System</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root {
+    --green: #176b52;
+    --dark-green: #10513e;
+    --light-green: #eaf5ef;
+    --text: #20332c;
+    --muted: #64746c;
+    --white: #ffffff;
+}
+body {
+    font-family: Arial, sans-serif;
+    background: #f8fbf9;
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+a {
+    text-decoration: none;
+}
+header {
+    background: var(--white);
+    border-bottom: 1px solid #e3ebe6;
+}
+.navbar {
+    max-width: 1150px;
+    margin: auto;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+.logo {
+    font-size: 21px;
+    font-weight: bold;
+    color: var(--green);
+}
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.nav-links a {
+    color: var(--text);
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-size: 14px;
+}
+.nav-links a:hover {
+    background: var(--light-green);
+}
+.nav-links .register-btn {
+    background: var(--green);
+    color: var(--white);
+}
+.nav-links .register-btn:hover {
+    background: var(--dark-green);
+}
+.logout-btn {
+    background: #fff0f0;
+    color: #a52c2c !important;
+}
+main {
+    flex: 1;
+}
+.page-heading {
+    background: var(--light-green);
+    padding: 55px 24px;
+    text-align: center;
+}
+.page-heading .tag {
+    display: inline-block;
+    background: var(--white);
+    color: var(--green);
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 14px;
+}
+.page-heading h1 {
+    font-size: clamp(30px, 5vw, 42px);
+    margin-bottom: 10px;
+}
+.page-heading p {
+    color: var(--muted);
+    max-width: 600px;
+    margin: auto;
+}
+.content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 45px 24px 65px;
+}
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 24px;
+}
+.section-title h2 {
+    font-size: 24px;
+}
+.election-count {
+    color: var(--green);
+    background: var(--light-green);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+.election-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+.election-card {
+    background: var(--white);
+    border: 1px solid #e2ebe5;
+    border-radius: 13px;
+    padding: 25px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.election-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 25px rgba(23, 107, 82, 0.08);
+}
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.election-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    background: var(--light-green);
+    color: var(--green);
+    border-radius: 11px;
+    font-size: 24px;
+}
+.election-year {
+    background: #f1f4f2;
+    color: var(--muted);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+.election-card h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    overflow-wrap: anywhere;
+}
+.election-card .description {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+.details {
+    border-top: 1px solid #e8eee9;
+    padding-top: 15px;
+    margin-bottom: 20px;
+}
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 5px 0;
+    font-size: 13px;
+}
+.detail-row span:first-child {
+    color: var(--muted);
+}
+.detail-row span:last-child {
+    font-weight: bold;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+.view-btn {
+    display: block;
+    text-align: center;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    background: var(--green);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+.view-btn:hover {
+    background: var(--dark-green);
+}
+.message {
+    padding: 20px;
+    text-align: center;
+    background: var(--white);
+    border: 1px solid #e2ebe5;
+    border-radius: 12px;
+    color: var(--muted);
+}
+.message h3 {
+    color: var(--text);
+    margin-bottom: 7px;
+}
+.retry-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 7px;
+    background: var(--green);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+footer {
+    text-align: center;
+    background: #153d30;
+    color: #e7f1eb;
+    padding: 23px 20px;
+    font-size: 13px;
+}
+footer p + p {
+    margin-top: 5px;
+    color: #c1d4c9;
+}
+@media (max-width: 700px) {
+    .navbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .election-grid {
+        grid-template-columns: 1fr;
+    }
+    .page-heading {
+        padding: 40px 18px;
+    }
+    .content {
+        padding: 30px 18px 45px;
+    }
+}
+@media (max-width: 400px) {
+    .navbar {
+        padding: 14px 16px;
+    }
+    .logo {
+        font-size: 19px;
+    }
+    .nav-links {
+        gap: 4px;
+    }
+    .election-card {
+        padding: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar">
+        <a href="index.html" class="logo">Online Voting System</a>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="elections.html">Elections</a>
+            <a href="login.html" id="loginLink">Login</a>
+            <a href="register.html" id="registerLink" class="register-btn">Register</a>
+            <a href="#" id="logoutBtn" class="logout-btn" style="display:none;">Logout</a>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="page-heading">
+        <span class="tag">EXPLORE ELECTIONS</span>
+        <h1>Available Elections</h1>
+        <p>
+            Browse the elections available in this educational demonstration
+            and explore their listed candidates.
+        </p>
+    </section>
+
+    <section class="content">
+        <div class="section-title">
+            <h2>Election List</h2>
+            <span class="election-count" id="electionCount">Loading...</span>
+        </div>
+
+        <div id="electionList" class="election-grid">
+            <div class="message">
+                Loading elections...
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p><strong>Online Voting System</strong></p>
+    <p>Educational project demonstration. Not an official government voting service.</p>
+</footer>
+
+<script>
+const API_BASE_URL = "http://localhost:5000";
+
+function updateNavigation() {
+    const isLoggedIn = Boolean(localStorage.getItem("loggedInUser"));
+
+    document.getElementById("loginLink").style.display =
+        isLoggedIn ? "none" : "inline-block";
+
+    document.getElementById("registerLink").style.display =
+        isLoggedIn ? "none" : "inline-block";
+
+    document.getElementById("logoutBtn").style.display =
+        isLoggedIn ? "inline-block" : "none";
+}
+
+document.getElementById("logoutBtn").addEventListener("click", function(event) {
+    event.preventDefault();
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "index.html";
+});
+
+function getField(election, possibleNames) {
+    for (const name of possibleNames) {
+        if (election[name] !== undefined && election[name] !== null &&
+            String(election[name]).trim() !== "") {
+            return election[name];
+        }
+    }
+    return null;
+}
+
+function createDetail(label, value) {
+    const row = document.createElement("div");
+    row.className = "detail-row";
+
+    const labelElement = document.createElement("span");
+    labelElement.textContent = label;
+
+    const valueElement = document.createElement("span");
+    valueElement.textContent = value;
+
+    row.appendChild(labelElement);
+    row.appendChild(valueElement);
+
+    return row;
+}
+
+function createElectionCard(election) {
+    const card = document.createElement("article");
+    card.className = "election-card";
+
+    const name = getField(election, [
+        "name", "title", "election_name", "electionName"
+    ]) || "Election";
+
+    const year = getField(election, [
+        "year", "election_year", "electionYear"
+    ]);
+
+    const type = getField(election, [
+        "type", "election_type", "electionType"
+    ]);
+
+    const description = getField(election, [
+        "description", "details"
+    ]) || "Explore the candidates listed for this election.";
+
+    const electionId = getField(election, ["id", "election_id", "electionId"]);
+
+    const top = document.createElement("div");
+    top.className = "card-top";
+
+    const icon = document.createElement("div");
+    icon.className = "election-icon";
+    icon.textContent = "\u2696";
+
+    top.appendChild(icon);
+
+    if (year !== null) {
+        const yearBadge = document.createElement("span");
+        yearBadge.className = "election-year";
+        yearBadge.textContent = String(year);
+        top.appendChild(yearBadge);
+    }
+
+    const title = document.createElement("h3");
+    title.textContent = name;
+
+    const descriptionElement = document.createElement("p");
+    descriptionElement.className = "description";
+    descriptionElement.textContent = description;
+
+    const details = document.createElement("div");
+    details.className = "details";
+
+    if (type !== null) {
+        details.appendChild(createDetail("Election Type", String(type)));
+    }
+
+    if (year !== null) {
+        details.appendChild(createDetail("Year", String(year)));
+    }
+
+    if (electionId !== null) {
+        details.appendChild(createDetail("Election ID", String(electionId)));
+    }
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "view-btn";
+    button.textContent = "View Candidates";
+
+    if (electionId === null) {
+        button.disabled = true;
+        button.textContent = "Election ID unavailable";
+        button.style.opacity = "0.6";
+    } else {
+        button.addEventListener("click", function() {
+            window.location.href =
+                "candidates.html?electionId=" +
+                encodeURIComponent(electionId);
+        });
+    }
+
+    card.appendChild(top);
+    card.appendChild(title);
+    card.appendChild(descriptionElement);
+    card.appendChild(details);
+    card.appendChild(button);
+
+    return card;
+}
+
+async function loadElections() {
+    const electionList = document.getElementById("electionList");
+    const electionCount = document.getElementById("electionCount");
+
+    electionList.replaceChildren();
+
+    const loading = document.createElement("div");
+    loading.className = "message";
+    loading.textContent = "Loading elections...";
+    electionList.appendChild(loading);
+
+    try {
+        const response = await fetch(API_BASE_URL + "/api/elections");
+
+        if (!response.ok) {
+            throw new Error("Unable to load elections.");
+        }
+
+        const elections = await response.json();
+
+        if (!Array.isArray(elections)) {
+            throw new Error("Unexpected response from the server.");
+        }
+
+        electionList.replaceChildren();
+
+        if (elections.length === 0) {
+            electionCount.textContent = "0 elections";
+
+            const emptyMessage = document.createElement("div");
+            emptyMessage.className = "message";
+
+            const title = document.createElement("h3");
+            title.textContent = "No elections available";
+
+            const description = document.createElement("p");
+            description.textContent =
+                "There are currently no elections in the database.";
+
+            emptyMessage.appendChild(title);
+            emptyMessage.appendChild(description);
+            electionList.appendChild(emptyMessage);
+            return;
+        }
+
+        electionCount.textContent =
+            elections.length + (elections.length === 1 ? " election" : " elections");
+
+        elections.forEach(function(election) {
+            electionList.appendChild(createElectionCard(election));
+        });
+
+    } catch (error) {
+        console.error("Election loading error:", error);
+
+        electionCount.textContent = "Unavailable";
+        electionList.replaceChildren();
+
+        const errorMessage = document.createElement("div");
+        errorMessage.className = "message";
+
+        const title = document.createElement("h3");
+        title.textContent = "Unable to load elections";
+
+        const description = document.createElement("p");
+        description.textContent =
+            "Check that the backend and MySQL are running, then try again.";
+
+        const retryButton = document.createElement("button");
+        retryButton.type = "button";
+        retryButton.className = "retry-btn";
+        retryButton.textContent = "Try Again";
+        retryButton.addEventListener("click", loadElections);
+
+        errorMessage.appendChild(title);
+        errorMessage.appendChild(description);
+        errorMessage.appendChild(retryButton);
+
+        electionList.appendChild(errorMessage);
+    }
+}
+
+updateNavigation();
+loadElections();
+</script>
+
+</body>
+</html>

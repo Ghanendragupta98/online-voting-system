@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Voting System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        nav {
+            background: #166534;
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav h2 {
+            color: white;
+            font-size: 22px;
+        }
+
+        nav div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #bbf7d0;
+        }
+
+        .hero {
+            min-height: 75vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            color: #14532d;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.7;
+            max-width: 650px;
+            margin-bottom: 30px;
+            color: #374151;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 25px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .primary-btn {
+            background: #15803d;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #166534;
+        }
+
+        .secondary-btn {
+            background: white;
+            color: #166534;
+            border: 2px solid #166534;
+        }
+
+        .secondary-btn:hover {
+            background: #dcfce7;
+        }
+
+        .admin-btn {
+            background: #14532d;
+            color: white;
+            border: 2px solid #14532d;
+        }
+
+        .admin-btn:hover {
+            background: #052e16;
+        }
+
+        .info {
+            padding: 35px 20px;
+            text-align: center;
+            background: white;
+        }
+
+        .info h2 {
+            margin-bottom: 15px;
+            color: #166534;
+        }
+
+        .info p {
+            color: #4b5563;
+            line-height: 1.7;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        footer {
+            background: #166534;
+            color: white;
+            text-align: center;
+            padding: 18px;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+            }
+
+            nav div {
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h2>Online Voting System</h2>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="elections.html">Elections</a>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+            <a href="admin-login.html">Admin Portal</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>ONLINE VOTING SYSTEM</h1>
+
+        <p>
+            Welcome to the Online Voting System.
+            Explore available elections, learn about candidates,
+            and participate in our educational voting demonstration.
+        </p>
+
+        <div class="buttons">
+            <a href="elections.html" class="btn primary-btn">
+                View Elections
+            </a>
+
+            <a href="login.html" class="btn secondary-btn">
+                Voter Login
+            </a>
+
+            <a href="register.html" class="btn secondary-btn">
+                Register Now
+            </a>
+
+            <a href="admin-login.html" class="btn admin-btn">
+                Admin Portal
+            </a>
+        </div>
+    </section>
+
+    <section class="info">
+        <h2>About the System</h2>
+        <p>
+            This project demonstrates an online voting interface
+            with voter registration, login, election details,
+            candidate information, and an administrator dashboard.
+            It is an educational demonstration and is not intended
+            for conducting real elections.
+        </p>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Online Voting System | Educational Project</p>
+    </footer>
+
+</body>
+</html>

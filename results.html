@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Election Results - Online Voting System</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .results-container {
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        .result-summary {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .result-card {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .winner-card {
+            border: 2px solid #28a745;
+            background: #f0fff4;
+        }
+
+        .winner {
+            color: green;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .candidate-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .party-name {
+            margin-top: 5px;
+        }
+
+        .vote-count {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .percentage {
+            margin-top: 5px;
+        }
+
+        .bar-container {
+            width: 100%;
+            background: #ddd;
+            height: 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 20px;
+            background: #4285f4;
+            border-radius: 10px;
+        }
+
+        #resultMessage {
+            text-align: center;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>ONLINE VOTING SYSTEM</h1>
+
+    <p>Election Results</p>
+
+</header>
+
+
+<nav>
+
+    <a href="index.html">Home</a>
+
+    <a href="elections.html">Elections</a>
+
+    <a href="login.html">Login</a>
+
+    <a href="register.html">Register</a>
+
+</nav>
+
+
+<main>
+
+    <div class="results-container">
+
+        <div class="form-container">
+
+            <h2 id="electionTitle">
+                Election Results
+            </h2>
+
+
+            <div
+                id="summary"
+                class="result-summary"
+            >
+
+                <strong>
+                    Total Votes:
+                </strong>
+
+                <span id="totalVotes">
+                    0
+                </span>
+
+            </div>
+
+
+            <p id="resultMessage">
+                Loading results...
+            </p>
+
+
+            <div id="results"></div>
+
+
+            <br>
+
+
+            <button
+                type="button"
+                onclick="goBack()"
+            >
+
+                ← Back to Elections
+
+            </button>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    <p>
+        Online Voting System | Mini Project
+    </p>
+
+</footer>
+
+
+<script>
+
+
+// ==========================================
+// GET ELECTION ID
+// ==========================================
+
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const electionId =
+    urlParams.get("election");
+
+
+// ==========================================
+// LOAD RESULTS
+// ==========================================
+
+async function loadResults() {
+
+    const message =
+        document.getElementById(
+            "resultMessage"
+        );
+
+
+    const resultsContainer =
+        document.getElementById(
+            "results"
+        );
+
+
+    // --------------------------------------
+    // CHECK ELECTION ID
+    // --------------------------------------
+
+    if (!electionId) {
+
+        message.innerText =
+            "Election ID is missing.";
+
+        return;
+
+    }
+
+
+    try {
+
+        // ----------------------------------
+        // API REQUEST
+        // ----------------------------------
+
+        const response =
+            await fetch(
+
+                "http://localhost:5000/api/results/"
+                + electionId
+
+            );
+
+
+        const text =
+            await response.text();
+
+
+        console.log(
+            "Results response:",
+            text
+        );
+
+
+        // ----------------------------------
+        // CHECK HTML RESPONSE
+        // ----------------------------------
+
+        if (
+            text.trim().startsWith("<")
+        ) {
+
+            throw new Error(
+                "Server returned HTML instead of JSON."
+            );
+
+        }
+
+
+        // ----------------------------------
+        // CONVERT JSON
+        // ----------------------------------
+
+        const data =
+            JSON.parse(text);
+
+
+        // ----------------------------------
+        // CHECK RESPONSE
+        // ----------------------------------
+
+        if (!response.ok) {
+
+            throw new Error(
+
+                data.message ||
+                "Unable to load results."
+
+            );
+
+        }
+
+
+        // ----------------------------------
+        // DISPLAY ELECTION NAME
+        // ----------------------------------
+
+        document.getElementById(
+            "electionTitle"
+        ).innerText =
+
+            data.electionName ||
+            "Election Results";
+
+
+        // ----------------------------------
+        // DISPLAY TOTAL VOTES
+        // ----------------------------------
+
+        document.getElementById(
+            "totalVotes"
+        ).innerText =
+
+            data.totalVotes || 0;
+
+
+        resultsContainer.innerHTML =
+            "";
+
+
+        // ----------------------------------
+        // CHECK RESULTS
+        // ----------------------------------
+
+        if (
+            !data.results ||
+            data.results.length === 0
+        ) {
+
+            message.innerText =
+                "No results available.";
+
+            return;
+
+        }
+
+
+        message.innerText =
+            "";
+
+
+        // ----------------------------------
+        // FIND HIGHEST VOTES
+        // ----------------------------------
+
+        let maximumVotes =
+            0;
+
+
+        data.results.forEach(
+            function(candidate) {
+
+                if (
+                    Number(candidate.vote_count) >
+                    maximumVotes
+                ) {
+
+                    maximumVotes =
+                        Number(
+                            candidate.vote_count
+                        );
+
+                }
+
+            }
+        );
+
+
+        // ----------------------------------
+        // DISPLAY CANDIDATES
+        // ----------------------------------
+
+        data.results.forEach(
+            function(candidate) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "result-card";
+
+
+                const voteCount =
+                    Number(
+                        candidate.vote_count
+                    );
+
+
+                const percentage =
+                    data.totalVotes > 0
+
+                    ? (
+                        voteCount /
+                        Number(data.totalVotes)
+                    ) * 100
+
+                    : 0;
+
+
+                // --------------------------
+                // WINNER CHECK
+                // --------------------------
+
+                let winnerText =
+                    "";
+
+
+                if (
+                    Number(data.totalVotes) > 0 &&
+                    voteCount === maximumVotes
+                ) {
+
+                    winnerText =
+                        `<div class="winner">
+                            ★ Leading Candidate
+                        </div>`;
+
+                    card.classList.add(
+                        "winner-card"
+                    );
+
+                }
+
+
+                // --------------------------
+                // CARD HTML
+                // --------------------------
+
+                card.innerHTML = `
+
+                    <div class="candidate-name">
+                        ${candidate.name}
+                    </div>
+
+                    <div class="party-name">
+                        Party:
+                        ${candidate.party}
+                    </div>
+
+                    <div class="vote-count">
+                        Votes:
+                        ${voteCount}
+                    </div>
+
+                    <div class="percentage">
+                        ${percentage.toFixed(1)}%
+                    </div>
+
+                    <div class="bar-container">
+
+                        <div
+                            class="bar"
+                            style="width:${percentage}%"
+                        ></div>
+
+                    </div>
+
+                    ${winnerText}
+
+                `;
+
+
+                resultsContainer.appendChild(
+                    card
+                );
+
+            }
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Results error:",
+            error
+        );
+
+
+        message.innerText =
+            error.message ||
+            "Unable to load results.";
+
+    }
+
+}
+
+
+// ==========================================
+// BACK BUTTON
+// ==========================================
+
+function goBack() {
+
+    window.location.href =
+        "elections.html";
+
+}
+
+
+// ==========================================
+// START
+// ==========================================
+
+loadResults();
+
+</script>
+
+
+</body>
+
+</html>
+
